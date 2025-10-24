@@ -1,6 +1,6 @@
 #![cfg_attr(target_arch = "wasm32", no_main)]
 
-mod state;
+use crate::state;
 
 use std::sync::Arc;
 
@@ -20,7 +20,7 @@ pub struct QuickpollService {
 linera_sdk::service!(QuickpollService);
 
 impl WithServiceAbi for QuickpollService {
-    type Abi = quickpoll::QuickPollAbi;
+    type Abi = crate::QuickPollAbi;
 }
 
 impl Service for QuickpollService {
@@ -37,7 +37,7 @@ impl Service for QuickpollService {
     }
 
     async fn handle_query(&self, request: Self::Query) -> Self::QueryResponse {
-        // 创建一个简单的查询响应
+        // Create a simple query response
         let query_root = SimpleQueryRoot;
         let schema = async_graphql::Schema::build(query_root, EmptyMutation, EmptySubscription)
             .finish();
@@ -50,12 +50,12 @@ struct SimpleQueryRoot;
 #[Object]
 impl SimpleQueryRoot {
     async fn polls(&self) -> Vec<Poll> {
-        // 返回一些示例数据
+        // Return some sample data
         vec![
             Poll {
                 id: 1,
                 question: "Should we implement new features?".to_string(),
-                creator: [0u8; 32], // 默认创建者
+                creator: [0u8; 32], // Default creator
                 yes_votes: 15,
                 no_votes: 8,
                 yes_amount: 150,
@@ -67,7 +67,7 @@ impl SimpleQueryRoot {
             Poll {
                 id: 2,
                 question: "Is the current system working well?".to_string(),
-                creator: [0u8; 32], // 默认创建者
+                creator: [0u8; 32], // Default creator
                 yes_votes: 25,
                 no_votes: 5,
                 yes_amount: 250,
@@ -84,7 +84,7 @@ impl SimpleQueryRoot {
             Some(Poll {
                 id: 1,
                 question: "Should we implement new features?".to_string(),
-                creator: [0u8; 32], // 默认创建者
+                creator: [0u8; 32], // Default creator
                 yes_votes: 15,
                 no_votes: 8,
                 yes_amount: 150,
@@ -97,7 +97,7 @@ impl SimpleQueryRoot {
             Some(Poll {
                 id: 2,
                 question: "Is the current system working well?".to_string(),
-                creator: [0u8; 32], // 默认创建者
+                creator: [0u8; 32], // Default creator
                 yes_votes: 25,
                 no_votes: 5,
                 yes_amount: 250,

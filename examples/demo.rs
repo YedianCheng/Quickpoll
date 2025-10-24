@@ -1,58 +1,58 @@
-// QuickPoll 演示程序
-// 展示如何使用 QuickPoll 系统
+// QuickPoll Demo Program
+// Show how to use QuickPoll system
 
 use quickpoll::{Operation, Response};
 
 fn main() {
-    println!("🚀 QuickPoll 演示程序");
+    println!("🚀 QuickPoll Demo Program");
     println!("====================");
     
-    // 演示操作类型
-    println!("\n📋 支持的操作:");
+    // Demonstrate operation types
+    println!("\n📋 Supported Operations:");
     
     let create_poll = Operation::CreatePoll {
-        question: "你认为这个项目怎么样？".to_string(),
+        question: "What do you think about this project?".to_string(),
         end_time: 1000,
     };
-    println!("1. 创建投票: {:?}", create_poll);
+    println!("1. Create Poll: {:?}", create_poll);
     
     let vote = Operation::Vote {
         poll_id: 1,
-        choice: true,  // 赞成
+        choice: true,  // Yes
         amount: 100,
     };
-    println!("2. 投票: {:?}", vote);
+    println!("2. Vote: {:?}", vote);
     
     let resolve = Operation::Resolve {
         poll_id: 1,
         correct_answer: true,
     };
-    println!("3. 解决投票: {:?}", resolve);
+    println!("3. Resolve Poll: {:?}", resolve);
     
-    // 演示响应类型
-    println!("\n📤 响应类型:");
+    // Demonstrate response types
+    println!("\n📤 Response Types:");
     let responses = vec![
         Response::PollCreated(1),
         Response::VoteSuccess,
         Response::ResolveSuccess,
-        Response::Error("投票已结束".to_string()),
+        Response::Error("Poll has ended".to_string()),
     ];
     
     for (i, response) in responses.iter().enumerate() {
         println!("{}. {:?}", i + 1, response);
     }
     
-    println!("\n🎯 使用场景:");
-    println!("• 预测市场 - 用户可以预测事件结果");
-    println!("• 治理投票 - 社区决策投票");
-    println!("• 民意调查 - 收集公众意见");
-    println!("• 决策支持 - 帮助组织做出决策");
+    println!("\n🎯 Use Cases:");
+    println!("• Prediction Markets - Users can predict event outcomes");
+    println!("• Governance Voting - Community decision voting");
+    println!("• Public Opinion Surveys - Collect public opinions");
+    println!("• Decision Support - Help organizations make decisions");
     
-    println!("\n🔧 技术特点:");
-    println!("• 基于 Linera 区块链");
-    println!("• GraphQL 查询支持");
-    println!("• 类型安全");
-    println!("• 异步处理");
+    println!("\n🔧 Technical Features:");
+    println!("• Based on Linera blockchain");
+    println!("• GraphQL query support");
+    println!("• Type safety");
+    println!("• Async processing");
     
-    println!("\n✨ 演示完成！");
+    println!("\n✨ Demo completed!");
 }

@@ -1,5 +1,5 @@
-// QuickPoll 终端交互演示
-// 一个简单、安全的命令行界面
+// QuickPoll Terminal Interactive Demo
+// A simple, secure command-line interface
 
 use std::io::{self, Write};
 use quickpoll::{Operation, Response};
@@ -63,7 +63,7 @@ impl QuickPollApp {
             }
             Response::VoteSuccess
         } else {
-            Response::Error("投票不存在".to_string())
+            Response::Error("Poll does not exist".to_string())
         }
     }
     
@@ -72,17 +72,17 @@ impl QuickPollApp {
             poll.status = PollStatus::Resolved;
             Response::ResolveSuccess
         } else {
-            Response::Error("投票不存在".to_string())
+            Response::Error("Poll does not exist".to_string())
         }
     }
     
     fn list_polls(&self) {
-        println!("\n📊 当前投票列表:");
+        println!("\n📊 Current Poll List:");
         if self.polls.is_empty() {
-            println!("  暂无投票");
+            println!("  No polls available");
         } else {
             for poll in &self.polls {
-                println!("  ID: {} | 问题: {} | 赞成: {}票({}) | 反对: {}票({}) | 状态: {:?}", 
+                println!("  ID: {} | Question: {} | Yes: {} votes({}) | No: {} votes({}) | Status: {:?}", 
                     poll.id, poll.question, poll.yes_votes, poll.yes_amount, 
                     poll.no_votes, poll.no_amount, poll.status);
             }
@@ -104,63 +104,63 @@ fn get_number(prompt: &str, default: u64) -> u64 {
 }
 
 fn main() {
-    println!("🗳️  QuickPoll 终端交互演示");
+    println!("🗳️  QuickPoll Terminal Interactive Demo");
     println!("==============================");
-    println!("欢迎使用 QuickPoll 投票系统！");
-    println!("这是一个基于 Linera 区块链的投票系统演示。\n");
+    println!("Welcome to QuickPoll voting system!");
+    println!("This is a voting system demo based on Linera blockchain.\n");
     
     let mut app = QuickPollApp::new();
     
-    // 演示一些基本操作
-    println!("🚀 开始演示...\n");
+    // Demonstrate some basic operations
+    println!("🚀 Starting demo...\n");
     
-    // 1. 创建投票
-    println!("📝 1. 创建投票演示:");
-    let response = app.create_poll("你认为 Rust 是最好的编程语言吗？".to_string(), 86400);
-    println!("   操作: CreatePoll {{ question: \"你认为 Rust 是最好的编程语言吗？\", end_time: 86400 }}");
-    println!("   响应: {:?}\n", response);
+    // 1. Create poll
+    println!("📝 1. Create Poll Demo:");
+    let response = app.create_poll("Do you think Rust is the best programming language?".to_string(), 86400);
+    println!("   Operation: CreatePoll {{ question: \"Do you think Rust is the best programming language?\", end_time: 86400 }}");
+    println!("   Response: {:?}\n", response);
     
-    // 2. 投票
-    println!("🗳️  2. 投票演示:");
+    // 2. Vote
+    println!("🗳️  2. Vote Demo:");
     let response = app.vote(1, true, 100);
-    println!("   操作: Vote {{ poll_id: 1, choice: true, amount: 100 }}");
-    println!("   响应: {:?}\n", response);
+    println!("   Operation: Vote {{ poll_id: 1, choice: true, amount: 100 }}");
+    println!("   Response: {:?}\n", response);
     
-    // 3. 再次投票
-    println!("🗳️  3. 再次投票演示:");
+    // 3. Vote again
+    println!("🗳️  3. Vote Again Demo:");
     let response = app.vote(1, false, 50);
-    println!("   操作: Vote {{ poll_id: 1, choice: false, amount: 50 }}");
-    println!("   响应: {:?}\n", response);
+    println!("   Operation: Vote {{ poll_id: 1, choice: false, amount: 50 }}");
+    println!("   Response: {:?}\n", response);
     
-    // 4. 查看投票列表
-    println!("📊 4. 查看投票列表:");
+    // 4. View poll list
+    println!("📊 4. View Poll List:");
     app.list_polls();
     println!();
     
-    // 5. 解决投票
-    println!("✅ 5. 解决投票演示:");
+    // 5. Resolve poll
+    println!("✅ 5. Resolve Poll Demo:");
     let response = app.resolve(1, true);
-    println!("   操作: Resolve {{ poll_id: 1, correct_answer: true }}");
-    println!("   响应: {:?}\n", response);
+    println!("   Operation: Resolve {{ poll_id: 1, correct_answer: true }}");
+    println!("   Response: {:?}\n", response);
     
-    // 6. 最终状态
-    println!("📊 6. 最终投票状态:");
+    // 6. Final status
+    println!("📊 6. Final Poll Status:");
     app.list_polls();
     println!();
     
-    println!("🔧 系统特点:");
-    println!("   • 基于 Linera 区块链框架");
-    println!("   • 支持 GraphQL 查询");
-    println!("   • 类型安全的 Rust 实现");
-    println!("   • 异步处理支持\n");
+    println!("🔧 System Features:");
+    println!("   • Based on Linera blockchain framework");
+    println!("   • GraphQL query support");
+    println!("   • Type-safe Rust implementation");
+    println!("   • Async processing support\n");
     
-    println!("🎯 使用场景:");
-    println!("   • 社区治理投票");
-    println!("   • 预测市场");
-    println!("   • 民意调查");
-    println!("   • 决策支持系统\n");
+    println!("🎯 Use Cases:");
+    println!("   • Community governance voting");
+    println!("   • Prediction markets");
+    println!("   • Public opinion surveys");
+    println!("   • Decision support systems\n");
     
-    println!("✨ 演示完成！");
-    println!("💡 提示: 这是一个基于 Linera 区块链的投票系统");
-    println!("   可以用于预测市场、治理投票等场景。\n");
+    println!("✨ Demo completed!");
+    println!("💡 Tip: This is a voting system based on Linera blockchain");
+    println!("   Can be used for prediction markets, governance voting, and other scenarios.\n");
 }

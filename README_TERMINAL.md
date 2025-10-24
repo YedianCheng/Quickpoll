@@ -1,129 +1,131 @@
-# QuickPoll 终端交互指南
+# QuickPoll Terminal Interactive Guide
 
-## 🚀 如何运行演示
+## 🚀 How to Run Demos
 
-### 1. 非交互式演示（推荐先运行这个）
+### 1. Non-interactive Demo (Recommended to run this first)
 ```bash
 cargo run --example terminal_demo
 ```
-这个演示会自动展示所有功能，不需要用户输入。
 
-### 2. 交互式演示
+This demo will automatically show all features without user input.
+
+### 2. Interactive Demo
 ```bash
 cargo run --example interactive_terminal
 ```
-这个演示允许你通过菜单与系统交互。
 
-## 📋 功能说明
+This demo allows you to interact with the system through a menu.
 
-### 支持的操作：
-1. **创建投票** - 创建新的投票问题
-2. **投票** - 对现有投票进行赞成/反对投票
-3. **解决投票** - 管理员可以结束投票并设置正确答案
-4. **查看投票列表** - 查看所有投票的状态和结果
-5. **帮助** - 显示系统帮助信息
-6. **退出** - 退出程序
+## 📋 Feature Description
 
-### 使用示例：
+### Supported Operations:
+1. **Create Poll** - Create new poll questions
+2. **Vote** - Vote yes/no on existing polls
+3. **Resolve Poll** - Administrators can end polls and set correct answers
+4. **View Poll List** - View all poll statuses and results
+5. **Help** - Display system help information
+6. **Exit** - Exit the program
 
-#### 创建投票
-- 选择选项 1
-- 输入投票问题，例如："你认为 Rust 是最好的编程语言吗？"
-- 输入结束时间（秒），默认 86400（24小时）
+### Usage Examples:
 
-#### 投票
-- 选择选项 2
-- 输入投票 ID（从创建投票的响应中获取）
-- 选择 1=赞成 或 0=反对
-- 输入投票金额，默认 100
+#### Create Poll
+- Select option 1
+- Enter poll question, e.g.: "Do you think Rust is the best programming language?"
+- Enter end time (seconds), default 86400 (24 hours)
 
-#### 解决投票
-- 选择选项 3
-- 输入要解决的投票 ID
-- 输入正确答案（1=赞成，0=反对）
+#### Vote
+- Select option 2
+- Enter poll ID (get from create poll response)
+- Choose 1=Yes or 0=No
+- Enter vote amount, default 100
 
-#### 查看投票列表
-- 选择选项 4
-- 系统会显示所有投票的详细信息
+#### Resolve Poll
+- Select option 3
+- Enter poll ID to resolve
+- Enter correct answer (1=Yes, 0=No)
 
-## 🔧 技术特点
+#### View Poll List
+- Select option 4
+- System will display detailed information of all polls
 
-- **基于 Linera 区块链框架**
-- **支持 GraphQL 查询**
-- **类型安全的 Rust 实现**
-- **异步处理支持**
+## 🔧 Technical Features
 
-## 🎯 使用场景
+- **Based on Linera blockchain framework**
+- **GraphQL query support**
+- **Type-safe Rust implementation**
+- **Async processing support**
 
-- **社区治理投票** - 社区决策投票
-- **预测市场** - 用户可以预测事件结果
-- **民意调查** - 收集公众意见
-- **决策支持系统** - 帮助组织做出决策
+## 🎯 Use Cases
 
-## 🛠️ 开发说明
+- **Community Governance Voting** - Community decision voting
+- **Prediction Markets** - Users can predict event outcomes
+- **Public Opinion Surveys** - Collect public opinions
+- **Decision Support Systems** - Help organizations make decisions
 
-### 项目结构
+## 🛠️ Development Guide
+
+### Project Structure
 ```
 src/
-├── lib.rs          # ABI 定义
-├── state.rs        # 数据结构和状态
-├── contract.rs     # 合约逻辑
-└── service.rs      # GraphQL 服务
+├── lib.rs          # ABI definition
+├── state.rs        # Data structures and state
+├── contract.rs     # Contract logic
+└── service.rs      # GraphQL service
 
 examples/
-├── demo.rs                    # 简单演示
-├── simple_demo.rs            # 详细演示
-├── terminal_demo.rs         # 非交互式终端演示
-└── interactive_terminal.rs   # 交互式终端演示
+├── demo.rs                    # Simple demo
+├── simple_demo.rs            # Detailed demo
+├── terminal_demo.rs         # Non-interactive terminal demo
+└── interactive_terminal.rs   # Interactive terminal demo
 ```
 
-### 运行测试
+### Run Tests
 ```bash
-# 运行所有测试
+# Run all tests
 cargo test
 
-# 运行单元测试
+# Run unit tests
 cargo test --lib
 
-# 运行集成测试
+# Run integration tests
 cargo test --test single_chain
 ```
 
-### 编译检查
+### Compile Check
 ```bash
-# 检查代码
+# Check code
 cargo check
 
-# 编译项目
+# Compile project
 cargo build
 
-# 运行特定示例
-cargo run --example <example_name>
+# Run specific example
+cargo run --example terminal_demo
 ```
 
-## 📝 注意事项
+## 📝 Notes
 
-1. **交互式演示**：如果程序出现死循环，请按 `Ctrl+C` 停止
-2. **输入验证**：程序会验证输入的有效性
-3. **数据持久性**：当前演示版本的数据在程序结束后会丢失
-4. **错误处理**：程序包含基本的错误处理机制
+1. **Interactive Demo**: If the program gets stuck in a loop, press `Ctrl+C` to stop
+2. **Input Validation**: The program validates input validity
+3. **Data Persistence**: Current demo version data is lost after program ends
+4. **Error Handling**: The program includes basic error handling mechanisms
 
-## 🎉 开始使用
+## 🎉 Getting Started
 
-1. 首先运行非交互式演示了解功能：
-   ```bash
-   cargo run --example terminal_demo
-   ```
+1. First run the non-interactive demo to understand features:
+```bash
+cargo run --example terminal_demo
+```
 
-2. 然后尝试交互式演示：
-   ```bash
-   cargo run --example interactive_terminal
-   ```
+2. Then try the interactive demo:
+```bash
+cargo run --example interactive_terminal
+```
 
-3. 按照菜单提示进行操作
+3. Follow the menu prompts to operate
 
-## 💡 提示
+## 💡 Tips
 
-- 这是一个演示版本，实际部署需要 Linera 区块链环境
-- 所有操作都是模拟的，不会真正影响区块链状态
-- 可以多次运行程序来测试不同场景
+- This is a demo version, actual deployment requires Linera blockchain environment
+- All operations are simulated and won't actually affect blockchain state
+- You can run the program multiple times to test different scenarios

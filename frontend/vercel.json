@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "REACT_APP_LINERA_GRAPHQL_ENDPOINT": "https://your-linera-endpoint.com",
+    "REACT_APP_LINERA_CHAIN_ID": "f3315e0e3891706c835f049d3dd8a22105065e427f6e77dd013ec07dc899e164",
+    "REACT_APP_LINERA_APPLICATION_ID": "940c1137174b2947278c79075d1568ba2f95b2ae23975ebd49f14f0eabc0a18d"
+  }
+}

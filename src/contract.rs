@@ -1,6 +1,6 @@
 #![cfg_attr(target_arch = "wasm32", no_main)]
 
-mod state;
+use crate::state;
 
 use linera_sdk::{
     linera_base_types::WithContractAbi,
@@ -8,7 +8,7 @@ use linera_sdk::{
     Contract, ContractRuntime,
 };
 
-use quickpoll::{Operation, Response};
+use crate::{Operation, Response, QuickPollAbi};
 
 use self::state::{QuickPollState, Poll, Vote, VoteKey, PollStatus};
 
@@ -21,7 +21,7 @@ linera_sdk::contract!(QuickpollContract);
 
 /// Implement WithContractAbi
 impl WithContractAbi for QuickpollContract {
-    type Abi = quickpoll::QuickPollAbi;
+    type Abi = QuickPollAbi;
 }
 
 /// Implement Contract
