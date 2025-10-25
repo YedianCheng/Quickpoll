@@ -1,14 +1,7 @@
-use serde::{Deserialize, Serialize};
-use linera_sdk::abi::{ContractAbi, ServiceAbi};
+/*! ABI of the QuickPoll Application */
 
-pub mod contract;
-pub mod service;
-pub mod state;
-pub mod user_chain;
-pub mod poll_chain;
-pub mod oracle_chain;
-pub mod cross_chain;
-pub mod chain_manager;
+use serde::{Deserialize, Serialize};
+use linera_sdk::linera_base_types::{ContractAbi, ServiceAbi};
 
 /// QuickPoll ABI
 pub struct QuickPollAbi;
@@ -21,14 +14,14 @@ pub enum Operation {
         question: String,
         end_time: u64,
     },
-    
+
     /// Vote
     Vote {
         poll_id: u64,
         choice: bool,  // true = Yes, false = No
         amount: u64,
     },
-    
+
     /// Resolve poll (admin operation)
     Resolve {
         poll_id: u64,
@@ -41,18 +34,18 @@ pub enum Operation {
 pub enum Response {
     /// Poll created successfully, return Poll ID
     PollCreated(u64),
-    
+
     /// Vote successful
     VoteSuccess,
-    
+
     /// Resolve successful
     ResolveSuccess,
-    
+
     /// Error
     Error(String),
 }
 
-// Implement ContractAbi  
+// Implement ContractAbi
 impl ContractAbi for QuickPollAbi {
     type Operation = Operation;
     type Response = Response;

@@ -9,7 +9,10 @@ A Polymarket-style decentralized prediction market platform built on Linera bloc
 
 ## 🌟 Live Demo
 
-- **Frontend**: [https://your-app.vercel.app](https://your-app.vercel.app) (Coming soon)
+- **Conway Testnet Deployment**: ✅ Successfully Deployed
+- **Chain ID**: `d1e24f0f84eb7b5a5b788f45b40d70e083488411eece8adfa811fe50998bdc7d`
+- **Application ID**: `5088003121860631e0b4162399b1ca680eac820ce28b904e942dccf61f9e1aec`
+- **Owner**: `0xf1708614d4d6526ac5177e96478ba2f87954e50bc3b8ce494baf2dcd3a8d8dfb`
 - **GitHub**: [https://github.com/YedianCheng/Quickpoll](https://github.com/YedianCheng/Quickpoll)
 - **Video Demo**: [Watch Demo](https://youtube.com/...) (Coming soon)
 
@@ -123,17 +126,39 @@ The application will be available at `http://localhost:3000`
 
 ### Deploy to Conway Testnet
 
-#### 1. Configure Linera
+#### 1. Install Linera CLI (v0.15.4)
 
 ```bash
-# Initialize wallet with Conway testnet
-linera wallet init --with-new-chain --faucet https://faucet.testnet-conway.linera.net
+# Install Linera service
+cargo install --locked linera-service@0.15.4
 
-# Get test tokens from faucet
-# Visit: https://faucet.testnet-conway.linera.net
+# Verify installation
+linera --version
+# Should show: Linera protocol: v0.15.4
 ```
 
-#### 2. Deploy Smart Contracts
+#### 2. Configure Wallet for Conway Testnet
+
+```bash
+# Create testnet directory
+mkdir -p ~/.linera_testnet
+
+# Set environment variables
+export LINERA_WALLET=$HOME/.linera_testnet/wallet_0.json
+export LINERA_KEYSTORE=$HOME/.linera_testnet/keystore_0.json
+export LINERA_STORAGE=rocksdb:$HOME/.linera_testnet/client_0.db
+
+# Initialize wallet
+linera wallet init --faucet https://faucet.testnet-conway.linera.net
+
+# Request a new chain (IMPORTANT!)
+linera wallet request-chain --faucet https://faucet.testnet-conway.linera.net
+
+# Set as default chain
+linera wallet set-default <YOUR_CHAIN_ID>
+```
+
+#### 3. Build and Deploy Smart Contracts
 
 ```bash
 # Build contracts
@@ -144,8 +169,23 @@ linera publish-and-create \
   target/wasm32-unknown-unknown/release/quickpoll_contract.wasm \
   target/wasm32-unknown-unknown/release/quickpoll_service.wasm
 
-# Note down the Chain ID and Application ID
+# Note down the Application ID from the output
 ```
+
+#### 4. Verify Deployment
+
+```bash
+# Check wallet status
+linera wallet show
+
+# Query your application
+linera query-application <APPLICATION_ID>
+```
+
+**Current Deployment:**
+- Chain ID: `d1e24f0f84eb7b5a5b788f45b40d70e083488411eece8adfa811fe50998bdc7d`
+- Application ID: `5088003121860631e0b4162399b1ca680eac820ce28b904e942dccf61f9e1aec`
+- Network: Conway Testnet
 
 #### 3. Deploy Frontend to Vercel
 
@@ -167,10 +207,15 @@ vercel --prod
 Create `.env` file in the frontend directory:
 
 ```env
-REACT_APP_LINERA_GRAPHQL_ENDPOINT=https://conway-testnet.linera.net
-REACT_APP_LINERA_CHAIN_ID=your-chain-id
-REACT_APP_LINERA_APPLICATION_ID=your-application-id
+# Conway Testnet Configuration
+REACT_APP_LINERA_GRAPHQL_ENDPOINT=http://localhost:8080
+REACT_APP_LINERA_CHAIN_ID=d1e24f0f84eb7b5a5b788f45b40d70e083488411eece8adfa811fe50998bdc7d
+REACT_APP_LINERA_APPLICATION_ID=5088003121860631e0b4162399b1ca680eac820ce28b904e942dccf61f9e1aec
+REACT_APP_NETWORK_NAME=Conway Testnet
+REACT_APP_FAUCET_URL=https://faucet.testnet-conway.linera.net
 ```
+
+See `frontend/ENV_SETUP.md` for detailed configuration instructions.
 
 ## 💡 Features
 

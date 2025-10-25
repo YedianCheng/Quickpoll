@@ -1,15 +1,16 @@
 #![cfg_attr(target_arch = "wasm32", no_main)]
 
-use crate::state;
+mod state;
 
 use std::sync::Arc;
 
 use async_graphql::{EmptyMutation, EmptySubscription, Object};
 use linera_sdk::{
-    linera_base_types::WithServiceAbi, views::View, Service,
-    ServiceRuntime,
+    linera_base_types::WithServiceAbi, Service,
+    ServiceRuntime, views::View,
 };
 
+use quickpoll::QuickPollAbi;
 use self::state::{QuickPollState, Poll, PollStatus};
 
 pub struct QuickpollService {
@@ -20,14 +21,15 @@ pub struct QuickpollService {
 linera_sdk::service!(QuickpollService);
 
 impl WithServiceAbi for QuickpollService {
-    type Abi = crate::QuickPollAbi;
+    type Abi = quickpoll::QuickPollAbi;
 }
 
 impl Service for QuickpollService {
     type Parameters = ();
 
     async fn new(runtime: ServiceRuntime<Self>) -> Self {
-        let state = QuickPollState::load(runtime.root_view_storage_context())
+        let context = runtime.root_view_storage_context();
+        let state = QuickPollState::load(context)
             .await
             .expect("Failed to load state");
         QuickpollService {

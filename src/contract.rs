@@ -1,6 +1,6 @@
 #![cfg_attr(target_arch = "wasm32", no_main)]
 
-use crate::state;
+mod state;
 
 use linera_sdk::{
     linera_base_types::WithContractAbi,
@@ -8,8 +8,7 @@ use linera_sdk::{
     Contract, ContractRuntime,
 };
 
-use crate::{Operation, Response, QuickPollAbi};
-
+use quickpoll::{Operation, Response, QuickPollAbi};
 use self::state::{QuickPollState, Poll, Vote, VoteKey, PollStatus};
 
 pub struct QuickpollContract {
@@ -33,7 +32,8 @@ impl Contract for QuickpollContract {
 
     /// Load the contract
     async fn load(runtime: ContractRuntime<Self>) -> Self {
-        let state = QuickPollState::load(runtime.root_view_storage_context())
+        let context = runtime.root_view_storage_context();
+        let state = QuickPollState::load(context)
             .await
             .expect("Failed to load state");
         QuickpollContract { state, runtime }
@@ -170,8 +170,9 @@ mod tests {
         // Try using None first to see if that works
         runtime.set_authenticated_signer(None);
         
+        let context = runtime.root_view_storage_context();
         let mut contract = QuickpollContract {
-            state: QuickPollState::load(runtime.root_view_storage_context())
+            state: QuickPollState::load(context)
                 .blocking_wait()
                 .expect("Failed to read from mock key value store"),
             runtime,
