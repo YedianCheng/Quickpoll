@@ -22,6 +22,12 @@ export class WalletManager {
     return typeof window !== 'undefined';
   }
 
+  // Check if MetaMask is available
+  async isMetaMaskAvailable(): Promise<boolean> {
+    if (!this.isBrowser()) return false;
+    return typeof (window as any).ethereum !== 'undefined';
+  }
+
   // Check if Linera wallet is available
   async isLineraWalletAvailable(): Promise<boolean> {
     if (!this.isBrowser()) return false;
@@ -30,42 +36,108 @@ export class WalletManager {
     return !!(window as any).linera;
   }
 
-  // Connect to Linera wallet
+  // Connect to wallet (MetaMask or Linera)
   async connectWallet(): Promise<WalletInfo> {
     if (!this.isBrowser()) {
       throw new Error('Wallet connection not available in server environment');
     }
 
     try {
-      // Check if Linera wallet is available
-      if (!(window as any).linera) {
-        throw new Error('Linera wallet not found. Please install the Linera wallet extension.');
+      // Try MetaMask first
+      if ((window as any).ethereum) {
+        console.log('🦊 Connecting to MetaMask...');
+        console.log('📱 MetaMask object:', (window as any).ethereum);
+        console.log('🔍 Is MetaMask?', (window as any).ethereum.isMetaMask);
+        
+        // Request wallet connection with timeout
+        console.log('📤 Requesting accounts...');
+        
+        const accounts = await Promise.race([
+          (window as any).ethereum.request({
+            method: 'eth_requestAccounts',
+          }),
+          new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('MetaMask request timeout after 60 seconds')), 60000)
+          )
+        ]) as string[];
+
+        console.log('✅ Accounts received:', accounts);
+
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No accounts found in MetaMask');
+        }
+
+        const address = accounts[0];
+        console.log('📍 Address:', address);
+        
+        const chainId = await (window as any).ethereum.request({
+          method: 'eth_chainId',
+        });
+        console.log('⛓️ Chain ID:', chainId);
+
+        this.walletInfo = {
+          address,
+          chainId,
+          isConnected: true,
+        };
+
+        // Listen for account changes
+        (window as any).ethereum.on('accountsChanged', (accounts: string[]) => {
+          console.log('👤 Account changed:', accounts);
+          if (accounts.length === 0) {
+            this.disconnectWallet();
+          } else {
+            if (this.walletInfo) {
+              this.walletInfo.address = accounts[0];
+              this.notifyListeners();
+            }
+          }
+        });
+
+        // Listen for chain changes
+        (window as any).ethereum.on('chainChanged', (chainId: string) => {
+          console.log('⛓️ Chain changed:', chainId);
+          if (this.walletInfo) {
+            this.walletInfo.chainId = chainId;
+            this.notifyListeners();
+          }
+        });
+
+        // Notify listeners
+        this.notifyListeners();
+
+        console.log('🎉 MetaMask connected successfully!');
+        return this.walletInfo;
+      }
+      
+      // Fallback to Linera wallet
+      if ((window as any).linera) {
+        console.log('Connecting to Linera wallet...');
+        
+        const accounts = await (window as any).linera.request({
+          method: 'eth_requestAccounts',
+        });
+
+        if (!accounts || accounts.length === 0) {
+          throw new Error('No accounts found');
+        }
+
+        const address = accounts[0];
+        const chainId = await (window as any).linera.request({
+          method: 'eth_chainId',
+        });
+
+        this.walletInfo = {
+          address,
+          chainId,
+          isConnected: true,
+        };
+
+        this.notifyListeners();
+        return this.walletInfo;
       }
 
-      // Request wallet connection
-      const accounts = await (window as any).linera.request({
-        method: 'eth_requestAccounts',
-      });
-
-      if (!accounts || accounts.length === 0) {
-        throw new Error('No accounts found');
-      }
-
-      const address = accounts[0];
-      const chainId = await (window as any).linera.request({
-        method: 'eth_chainId',
-      });
-
-      this.walletInfo = {
-        address,
-        chainId,
-        isConnected: true,
-      };
-
-      // Notify listeners
-      this.notifyListeners();
-
-      return this.walletInfo;
+      throw new Error('No wallet found. Please install MetaMask or Linera wallet extension.');
     } catch (error) {
       console.error('Wallet connection failed:', error);
       throw error;
@@ -148,6 +220,12 @@ export const walletManager = WalletManager.getInstance();
 // Declare global window interface for TypeScript
 declare global {
   interface Window {
+    ethereum?: {
+      request: (params: any) => Promise<any>;
+      on: (event: string, callback: (params: any) => void) => void;
+      removeListener: (event: string, callback: (params: any) => void) => void;
+      isMetaMask?: boolean;
+    };
     linera?: {
       request: (params: any) => Promise<any>;
       on: (event: string, callback: (params: any) => void) => void;

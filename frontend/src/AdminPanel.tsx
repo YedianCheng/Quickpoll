@@ -46,9 +46,10 @@ function AdminPanel({ onLogout }: AdminPanelProps) {
   });
   const [activeTab, setActiveTab] = useState<'users' | 'markets' | 'stats'>('stats');
   const [searchQuery, setSearchQuery] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  // Mock data - 在实际应用中从后端API获取
+  // Mock data - In production, fetch from backend API
   useEffect(() => {
     const mockUsers: User[] = [
       {
@@ -83,35 +84,40 @@ function AdminPanel({ onLogout }: AdminPanelProps) {
       }
     ];
 
-    const mockPendingMarkets: PendingMarket[] = [
-      {
-        id: 1,
-        question: 'Will Ethereum reach $5,000 by end of 2024?',
-        category: 'Crypto',
-        endTime: 1735689600,
-        creator: 'alice_crypto',
-        status: 'pending',
-        submittedAt: '2024-01-22'
-      },
-      {
-        id: 2,
-        question: 'Will the US election result be contested?',
-        category: 'Politics',
-        endTime: 1735689600,
-        creator: 'bob_trader',
-        status: 'pending',
-        submittedAt: '2024-01-21'
+    // Load real polls from localStorage
+    const storedPolls = localStorage.getItem('quickpoll_polls');
+    let realPolls: any[] = [];
+    
+    if (storedPolls) {
+      try {
+        realPolls = JSON.parse(storedPolls);
+      } catch (error) {
+        console.error('Failed to parse polls:', error);
       }
-    ];
+    }
+
+    // Convert polls to pending markets format
+    const realPendingMarkets: PendingMarket[] = realPolls.map(poll => ({
+      id: poll.id,
+      question: poll.question,
+      category: poll.category || 'General',
+      endTime: poll.endTime,
+      creator: 'User',
+      status: poll.status === 'Pending' ? 'pending' as const : 'approved' as const,
+      submittedAt: new Date().toISOString().split('T')[0]
+    }));
+
+    // Calculate total volume from real polls
+    const totalVolume = realPolls.reduce((sum, poll) => sum + (poll.volume || 0), 0);
 
     setUsers(mockUsers);
-    setPendingMarkets(mockPendingMarkets);
+    setPendingMarkets(realPendingMarkets);
     setStats({
       totalUsers: mockUsers.length,
       activeUsers: mockUsers.filter(u => u.status === 'active').length,
-      pendingMarkets: mockPendingMarkets.length,
-      totalMarkets: 15,
-      totalVolume: 125000
+      pendingMarkets: realPendingMarkets.filter(m => m.status === 'pending').length,
+      totalMarkets: realPolls.length,
+      totalVolume
     });
   }, []);
 
@@ -132,19 +138,57 @@ function AdminPanel({ onLogout }: AdminPanelProps) {
   };
 
   const approveMarket = (marketId: number) => {
-    setPendingMarkets(pendingMarkets.map(market => 
-      market.id === marketId 
-        ? { ...market, status: 'approved' as const }
-        : market
-    ));
+    // Update localStorage
+    const storedPolls = localStorage.getItem('quickpoll_polls');
+    if (storedPolls) {
+      try {
+        const polls = JSON.parse(storedPolls);
+        const updatedPolls = polls.map((poll: any) => 
+          poll.id === marketId 
+            ? { ...poll, status: 'Active', isPending: false }
+            : poll
+        );
+        localStorage.setItem('quickpoll_polls', JSON.stringify(updatedPolls));
+        
+        // Update local state
+        setPendingMarkets(pendingMarkets.map(market => 
+          market.id === marketId 
+            ? { ...market, status: 'approved' as const }
+            : market
+        ));
+        
+        alert('✅ Market approved!');
+        // Reload data
+        window.location.reload();
+      } catch (error) {
+        console.error('Failed to approve market:', error);
+      }
+    }
   };
 
   const rejectMarket = (marketId: number, reason: string) => {
-    setPendingMarkets(pendingMarkets.map(market => 
-      market.id === marketId 
-        ? { ...market, status: 'rejected' as const, reason }
-        : market
-    ));
+    // Remove from localStorage
+    const storedPolls = localStorage.getItem('quickpoll_polls');
+    if (storedPolls) {
+      try {
+        const polls = JSON.parse(storedPolls);
+        const updatedPolls = polls.filter((poll: any) => poll.id !== marketId);
+        localStorage.setItem('quickpoll_polls', JSON.stringify(updatedPolls));
+        
+        // Update local state
+        setPendingMarkets(pendingMarkets.map(market => 
+          market.id === marketId 
+            ? { ...market, status: 'rejected' as const, reason }
+            : market
+        ));
+        
+        alert('❌ Market rejected and removed!');
+        // Reload data
+        setTimeout(() => window.location.reload(), 1000);
+      } catch (error) {
+        console.error('Failed to reject market:', error);
+      }
+    }
   };
 
   const filteredUsers = users.filter(user =>

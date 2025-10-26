@@ -9,12 +9,13 @@ A Polymarket-style decentralized prediction market platform built on Linera bloc
 
 ## 🌟 Live Demo
 
+- **Live App**: [https://frontend-eqp7egdsk-yedians-projects.vercel.app](https://frontend-eqp7egdsk-yedians-projects.vercel.app)
 - **Conway Testnet Deployment**: ✅ Successfully Deployed
 - **Chain ID**: `d1e24f0f84eb7b5a5b788f45b40d70e083488411eece8adfa811fe50998bdc7d`
 - **Application ID**: `5088003121860631e0b4162399b1ca680eac820ce28b904e942dccf61f9e1aec`
 - **Owner**: `0xf1708614d4d6526ac5177e96478ba2f87954e50bc3b8ce494baf2dcd3a8d8dfb`
 - **GitHub**: [https://github.com/YedianCheng/Quickpoll](https://github.com/YedianCheng/Quickpoll)
-- **Video Demo**: [Watch Demo](https://youtube.com/...) (Coming soon)
+- **Video Demo**: [Watch Demo](https://youtu.be/Es3qSYv9RWg)
 
 ## 🎯 Overview
 
@@ -312,7 +313,7 @@ npm test
 
 ## 🎥 Demo Video
 
-[Watch the full demo video](https://youtube.com/...) (Coming soon)
+[Watch the full demo video](https://youtu.be/Es3qSYv9RWg)
 
 **What you'll see:**
 - Market creation and approval workflow
@@ -359,8 +360,8 @@ We welcome contributions! Please follow these steps:
 
 - **Yedian Cheng** - Lead Developer
   - GitHub: [@YedianCheng](https://github.com/YedianCheng)
-  - Telegram: @your-telegram
-  - X (Twitter): @your-twitter
+  - Telegram: @yokicheng
+  - X (Twitter): @player0xne
 
 ## 📄 License
 
@@ -376,7 +377,9 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 - **Issues**: [GitHub Issues](https://github.com/YedianCheng/Quickpoll/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/YedianCheng/Quickpoll/discussions)
-- **Email**: your-email@example.com
+- **X (Twitter)**: [@player0xne](https://x.com/player0xne)
+- **Telegram**: [@yokicheng](https://t.me/yokicheng)
+- **Email**: chengyedian@gmail.com
 
 ## 🌟 Show Your Support
 
